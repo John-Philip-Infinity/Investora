@@ -9,7 +9,7 @@ const NAV = [
   { href: "#", label: "Markets",       icon: Globe },
 ];
 
-export default function Navbar() {
+export default function Navbar({ onLaunch }: { onLaunch: () => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -45,14 +45,19 @@ export default function Navbar() {
 
         {/* CTA */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(0,200,5,0.08)", border: "1px solid rgba(0,200,5,0.2)", borderRadius: 9999, padding: "0.3rem 0.75rem" }}>
+          <div className="hide-on-mobile" style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(0,200,5,0.08)", border: "1px solid rgba(0,200,5,0.2)", borderRadius: 9999, padding: "0.3rem 0.75rem" }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00C805", display: "inline-block" }} className="pulse-dot" />
             <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#00C805", letterSpacing: "0.05em" }}>MARKETS OPEN</span>
           </div>
-          <button className="btn-primary" style={{ padding: "0.45rem 1rem", fontSize: "0.8rem" }}>
-            Launch Research
+          <button 
+            onClick={onLaunch}
+            className="btn-primary" 
+            style={{ padding: "0.45rem 1rem", fontSize: "0.8rem" }}
+          >
+            <span className="hide-on-mobile">Launch Research</span>
+            <span className="display-on-mobile" style={{ display: "none" }}>Research</span>
           </button>
-          <button onClick={() => setOpen(!open)} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: 6, cursor: "pointer", color: "#9CA3AF", display: "none" }} className="mobile-menu-btn">
+          <button onClick={() => setOpen(!open)} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: 6, cursor: "pointer", color: "#9CA3AF" }} className="mobile-menu-btn">
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>

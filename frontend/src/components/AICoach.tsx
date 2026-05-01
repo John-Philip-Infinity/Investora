@@ -88,7 +88,7 @@ export default function AICoach() {
   };
 
   return (
-    <div id="coach" className="glass-card rounded-2xl flex flex-col" style={{ height: "520px" }}>
+    <div id="coach" className="glass-card rounded-2xl flex flex-col" style={{ minHeight: "520px", maxHeight: "80vh" }}>
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
         <div className="flex items-center gap-2.5">

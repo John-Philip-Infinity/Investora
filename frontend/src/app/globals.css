@@ -182,3 +182,84 @@ body {
   text-transform: uppercase;
   color: #4B5563;
 }
+
+/* ── RESPONSIVE UTILITIES ── */
+.container-responsive {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-responsive { padding: 0 1.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive { padding: 0 2rem; }
+}
+
+/* Responsive Grid */
+.grid-responsive-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive-2 {
+    grid-template-columns: 1fr 340px;
+  }
+}
+
+.grid-responsive-bento {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid-responsive-bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive-bento {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Hide on mobile */
+.hide-on-mobile {
+  display: none !important;
+}
+@media (min-width: 768px) {
+  .hide-on-mobile {
+    display: flex !important;
+  }
+}
+
+.display-on-mobile {
+  display: flex !important;
+}
+@media (min-width: 768px) {
+  .display-on-mobile {
+    display: none !important;
+  }
+}
+
+/* Mobile Scroll Table wrapper */
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive Typography */
+@media (max-width: 640px) {
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.25rem !important; }
+  .search-input { padding: 0.75rem 1rem !important; font-size: 0.85rem !important; }
+  .btn-primary { padding: 0.5rem 1rem !important; font-size: 0.75rem !important; }
+}

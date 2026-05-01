@@ -108,7 +108,7 @@ export default function Screeners({ onAnalyze }: { onAnalyze: (ticker: string) =
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid-responsive-2">
         {/* Criteria Panel */}
         <div className="glass-card rounded-2xl p-5">
           <h3 className="font-semibold mb-1">{strategy.name} Criteria</h3>

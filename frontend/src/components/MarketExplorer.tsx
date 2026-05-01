@@ -68,7 +68,29 @@ export default function MarketExplorer({ onAnalyze }: { onAnalyze: (ticker: stri
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       {/* Header Area */}
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end", gap: "1rem" }}>
+      <div className="market-explorer-header">
+        <style>{`
+          .market-explorer-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 1rem;
+          }
+          @media (max-width: 640px) {
+            .market-explorer-header {
+              flex-direction: column;
+              align-items: flex-start;
+            }
+            .market-explorer-actions {
+              width: 100%;
+              flex-direction: column;
+            }
+            .market-explorer-search {
+              width: 100% !important;
+            }
+          }
+        `}</style>
         <div>
           <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#F3F4F6", marginBottom: "0.25rem" }}>Market Explorer</h2>
           <p style={{ fontSize: "0.85rem", color: "#6B7280" }}>
@@ -76,7 +98,7 @@ export default function MarketExplorer({ onAnalyze }: { onAnalyze: (ticker: stri
           </p>
         </div>
         
-        <div style={{ display: "flex", gap: "0.75rem" }}>
+        <div style={{ display: "flex", gap: "0.75rem" }} className="market-explorer-actions">
           <button 
             onClick={fetchMarkets}
             disabled={loading}
@@ -85,20 +107,21 @@ export default function MarketExplorer({ onAnalyze }: { onAnalyze: (ticker: stri
               borderRadius: "8px", padding: "0.5rem", cursor: "pointer", color: "#9CA3AF",
               display: "flex", alignItems: "center", gap: "0.5rem", transition: "all 0.2s"
             }}
-            onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
-            onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)"}
           >
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
             <span style={{ fontSize: "0.75rem", fontWeight: 600 }}>Refresh</span>
           </button>
           
-          <div style={{ position: "relative" }}>
+          <div style={{ position: "relative" }} className="market-explorer-search">
             <Search size={14} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#4B5563" }} />
             <input 
               type="text" 
               placeholder="Search markets..." 
               value={search}
               onChange={e => setSearch(e.target.value)}
+              className="market-explorer-search-input"
               style={{ 
                 background: "#151A20", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", 
                 padding: "0.5rem 0.75rem 0.5rem 2.25rem", fontSize: "0.85rem", color: "#F3F4F6", width: "200px",
@@ -129,9 +152,8 @@ export default function MarketExplorer({ onAnalyze }: { onAnalyze: (ticker: stri
         ))}
       </div>
 
-      {/* Table Card */}
       <div className="card" style={{ overflow: "hidden" }}>
-        <div style={{ overflowX: "auto" }}>
+        <div className="table-responsive-wrapper">
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "rgba(0,0,0,0.2)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>

@@ -65,6 +65,14 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
   const [data, setData] = useState<AnalysisData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<"summary" | "casestudy" | "ratings">("summary");
+  const [researchPhase, setResearchPhase] = useState<string | null>(null);
+
+  const AGENTS = [
+    { id: "quant", label: "Quantitative Agent", icon: <TrendingUp size={16}/>, msg: "Analyzing technical breakout patterns and volume delta..." },
+    { id: "fund",  label: "Fundamental Bot",   icon: <Target size={16}/>,     msg: "Scanning quarterly earnings and balance sheet health..." },
+    { id: "sent",  label: "Sentiment Engine",  icon: <BrainCircuit size={16}/>, msg: "Aggregating news sentiment and social velocity..." },
+    { id: "macro", label: "Macro Strategist",  icon: <Globe size={16}/>,     msg: "Evaluating interest rate sensitivity and sector rotation..." },
+  ];
 
   const analyze = async (e?: React.FormEvent, searchTicker?: string) => {
     if (e) e.preventDefault();
@@ -73,7 +81,17 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
     
     setLoading(true);
     setError(null);
+    setData(null);
+    
     try {
+      // Simulate Multi-Agent Collaboration
+      for (const agent of AGENTS) {
+        setResearchPhase(agent.label);
+        await new Promise(r => setTimeout(r, 600)); // Shortened
+      }
+      setResearchPhase("Synthesizing agent reports...");
+      await new Promise(r => setTimeout(r, 400));
+
       const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
       const res = await fetch(`${API_BASE}/api/analyze`, { 
         method: "POST", 
@@ -83,12 +101,13 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
       if (!res.ok) throw new Error("Search failed");
       const json = await res.json();
       setData(json);
-      setActiveView("summary"); // Reset view on new search
+      setActiveView("summary");
     } catch (err) {
       console.error(err);
       setError("Could not analyze this ticker. Please check the symbol and try again.");
     }
     setLoading(false);
+    setResearchPhase(null);
   };
 
   useEffect(() => {
@@ -130,14 +149,15 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
         </p>
 
         <form onSubmit={analyze} style={{ position: "relative", marginBottom: "1.5rem" }}>
-          <Search size={20} style={{ position: "absolute", left: "20px", top: "50%", transform: "translateY(-50%)", color: "#4B5563" }} />
+          <style>{styles}</style>
+          <Search size={20} className="hide-on-mobile" style={{ position: "absolute", left: "20px", top: "50%", transform: "translateY(-50%)", color: "#4B5563", pointerEvents: "none" }} />
           <input 
             type="text" 
             value={ticker} 
             onChange={e => setTicker(e.target.value)}
             placeholder="Search e.g. NVDA, RELIANCE, BTC, TCS..."
             className="search-input"
-            style={{ paddingLeft: "3.5rem", borderRadius: "16px" }}
+            style={{ borderRadius: "16px" }}
           />
           <button 
             type="submit" 
@@ -148,6 +168,38 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
             {loading ? <RefreshCw size={18} className="animate-spin" /> : <><span style={{ marginRight: "8px" }}>Analyze</span> <ArrowRight size={16} /></>}
           </button>
         </form>
+
+        {/* Multi-Agent Research Animation */}
+        <AnimatePresence>
+          {researchPhase && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              style={{ padding: "1.5rem", background: "rgba(0,229,255,0.05)", borderRadius: "16px", border: "1px solid rgba(0,229,255,0.1)", textAlign: "center" }}
+            >
+              <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "1rem" }}>
+                {AGENTS.map(a => (
+                  <div key={a.id} style={{ 
+                    padding: "8px", borderRadius: "8px", 
+                    background: researchPhase.includes(a.label) ? "rgba(0,229,255,0.2)" : "rgba(255,255,255,0.05)",
+                    color: researchPhase.includes(a.label) ? "#00E5FF" : "#4B5563",
+                    transition: "all 0.3s"
+                  }}>
+                    {a.icon}
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
+                <RefreshCw size={14} className="animate-spin" color="#00E5FF" />
+                {researchPhase}
+              </div>
+              <div style={{ fontSize: "0.75rem", color: "#6B7280", marginTop: "4px" }}>
+                Collaborating with specialized agents to generate GPS Score...
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {error && (
           <div style={{ color: "#FF3B3B", fontSize: "0.85rem", background: "rgba(255,59,59,0.1)", padding: "0.75rem", borderRadius: "8px", border: "1px solid rgba(255,59,59,0.2)" }}>
@@ -211,7 +263,7 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
             {activeView === "summary" && (
               <>
                 {/* Summary Hero Card */}
-                <div className="card" style={{ padding: "2rem", display: "grid", gridTemplateColumns: "1fr 280px", gap: "2rem", alignItems: "center", background: "linear-gradient(145deg, #151A20 0%, #1C2228 100%)" }}>
+                <div className="card summary-hero-grid" style={{ padding: "2rem", background: "linear-gradient(145deg, #151A20 0%, #1C2228 100%)" }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                       <div style={{ background: "rgba(0,229,255,0.1)", padding: "12px", borderRadius: "16px" }}>
@@ -246,7 +298,7 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem", borderLeft: "1px solid rgba(255,255,255,0.05)", paddingLeft: "2rem" }}>
+                  <div className="summary-chart-container" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
                     <div style={{ position: "relative", width: "160px", height: "160px" }}>
                       <svg viewBox="0 0 200 200" style={{ width: "100%", height: "100%", transform: "rotate(-90deg)" }}>
                         <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="12"/>
@@ -269,7 +321,7 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
                 </div>
 
                 {/* Detailed Analysis Grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "1.5rem" }}>
+                <div className="grid-responsive-2">
                   <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                     {/* Pillars Card */}
                     <div className="card" style={{ padding: "1.5rem" }}>
@@ -455,3 +507,47 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
     </section>
   );
 }
+
+const styles = `
+  .summary-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .summary-hero-grid {
+      grid-template-columns: 1fr 280px;
+    }
+  }
+  
+  .summary-chart-container {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 2rem;
+    width: 100%;
+  }
+  @media (min-width: 1024px) {
+    .summary-chart-container {
+      border-top: none;
+      border-left: 1px solid rgba(255,255,255,0.05);
+      padding-top: 0;
+      padding-left: 2rem;
+      width: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .search-input {
+      padding: 0.8rem 1rem !important;
+      font-size: 0.85rem !important;
+    }
+    .btn-primary {
+      position: relative !important;
+      top: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      margin-top: 0.5rem !important;
+      height: auto !important;
+    }
+  }
+`;

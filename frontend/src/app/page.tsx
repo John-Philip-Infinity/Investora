@@ -22,11 +22,31 @@ export default function Home() {
   const triggerAnalysis = (ticker: string) => {
     setAnalysisTicker(ticker);
     setActiveTab("analyzer");
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("investora_active_tab", "analyzer");
+      sessionStorage.setItem("investora_ticker", ticker);
+    }
   };
+
+  // State Persistence
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedTab = sessionStorage.getItem("investora_active_tab");
+      const savedTicker = sessionStorage.getItem("investora_ticker");
+      if (savedTab) setActiveTab(savedTab);
+      if (savedTicker) setAnalysisTicker(savedTicker);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("investora_active_tab", activeTab);
+    }
+  }, [activeTab]);
 
   return (
     <div className="bg-grid" style={{ minHeight: "100vh", backgroundColor: "#0B0E11" }}>
-      <Navbar />
+      <Navbar onLaunch={() => setActiveTab("analyzer")} />
       <TickerTape />
 
       {/* Ambient glows */}
@@ -35,7 +55,7 @@ export default function Home() {
         <div style={{ position: "absolute", top: "40%", right: -200, width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(167,139,250,0.05) 0%, transparent 70%)" }} />
       </div>
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: 1280, margin: "0 auto", padding: "0 1.25rem 4rem" }}>
+      <div className="container-responsive" style={{ position: "relative", zIndex: 1, paddingBottom: "4rem" }}>
 
         {/* Tab Bar */}
         <div style={{ display: "flex", gap: 4, padding: "1rem 0", borderBottom: "1px solid rgba(255,255,255,0.07)", overflowX: "auto" }}>
@@ -68,8 +88,7 @@ export default function Home() {
           {activeTab === "markets"   && <MarketExplorer onAnalyze={triggerAnalysis} />}
           {activeTab === "screeners" && <Screeners onAnalyze={triggerAnalysis} />}
           {activeTab === "coach"     && (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 340px", gap: "1.5rem", alignItems: "start" }}>
+            <div className="grid-responsive-2">
                 <AICoach />
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   {/* Recession Mode */}
@@ -108,7 +127,6 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-              </div>
             </div>
           )}
         </div>
