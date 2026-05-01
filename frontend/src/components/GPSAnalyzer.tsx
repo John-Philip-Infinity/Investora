@@ -104,7 +104,8 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
       setActiveView("summary");
     } catch (err) {
       console.error(err);
-      setError("Could not analyze this ticker. Please check the symbol and try again.");
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+      setError(`Analysis failed. The AI engine at ${API_BASE} is unreachable. Check your Vercel Environment Variables.`);
     }
     setLoading(false);
     setResearchPhase(null);

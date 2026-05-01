@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Activity, Menu, X, Search, BarChart2, BrainCircuit, TrendingUp, Globe } from "lucide-react";
 
 const NAV = [
@@ -11,6 +11,22 @@ const NAV = [
 
 export default function Navbar({ onLaunch }: { onLaunch: () => void }) {
   const [open, setOpen] = useState(false);
+  const [apiStatus, setApiStatus] = useState<"checking" | "online" | "offline">("checking");
+
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+        const res = await fetch(`${API_BASE}/api/prices`);
+        setApiStatus(res.ok ? "online" : "offline");
+      } catch {
+        setApiStatus("offline");
+      }
+    };
+    check();
+    const id = setInterval(check, 10000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <header className="glass-nav" style={{ position: "sticky", top: 0, zIndex: 50 }}>
@@ -45,9 +61,11 @@ export default function Navbar({ onLaunch }: { onLaunch: () => void }) {
 
         {/* CTA */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div className="hide-on-mobile" style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(0,200,5,0.08)", border: "1px solid rgba(0,200,5,0.2)", borderRadius: 9999, padding: "0.3rem 0.75rem" }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00C805", display: "inline-block" }} className="pulse-dot" />
-            <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#00C805", letterSpacing: "0.05em" }}>MARKETS OPEN</span>
+          <div className="hide-on-mobile" style={{ display: "flex", alignItems: "center", gap: 6, background: apiStatus === "online" ? "rgba(0,200,5,0.08)" : "rgba(255,59,59,0.08)", border: `1px solid ${apiStatus === "online" ? "rgba(0,200,5,0.2)" : "rgba(255,59,59,0.2)"}`, borderRadius: 9999, padding: "0.3rem 0.75rem" }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: apiStatus === "online" ? "#00C805" : "#FF3B3B", display: "inline-block" }} className={apiStatus === "online" ? "pulse-dot" : ""} />
+            <span style={{ fontSize: "0.7rem", fontWeight: 700, color: apiStatus === "online" ? "#00C805" : "#FF3B3B", letterSpacing: "0.05em" }}>
+              API: {apiStatus.toUpperCase()}
+            </span>
           </div>
           <button 
             onClick={onLaunch}
