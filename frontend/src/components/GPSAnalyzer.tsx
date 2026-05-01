@@ -159,17 +159,10 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
             className="search-input"
             style={{ borderRadius: "16px" }}
           />
-          <button 
-            type="submit" 
-            disabled={loading || !ticker.trim()} 
-            className="btn-primary"
-            style={{ position: "absolute", right: "8px", top: "8px", height: "calc(100% - 16px)", borderRadius: "10px" }}
-          >
             {loading ? <RefreshCw size={18} className="animate-spin" /> : <><span style={{ marginRight: "8px" }}>Analyze</span> <ArrowRight size={16} /></>}
           </button>
         </form>
 
-        {/* Multi-Agent Research Animation */}
         <AnimatePresence>
           {researchPhase && (
             <motion.div 
@@ -182,8 +175,9 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
                 {AGENTS.map(a => (
                   <div key={a.id} style={{ 
                     padding: "8px", borderRadius: "8px", 
-                    background: researchPhase.includes(a.label) ? "rgba(0,229,255,0.2)" : "rgba(255,255,255,0.05)",
-                    color: researchPhase.includes(a.label) ? "#00E5FF" : "#4B5563",
+                    background: researchPhase === a.label ? "rgba(0,229,255,0.2)" : "rgba(255,255,255,0.05)",
+                    color: researchPhase === a.label ? "#00E5FF" : "#4B5563",
+                    transform: researchPhase === a.label ? "scale(1.1)" : "scale(1)",
                     transition: "all 0.3s"
                   }}>
                     {a.icon}
@@ -194,8 +188,8 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
                 <RefreshCw size={14} className="animate-spin" color="#00E5FF" />
                 {researchPhase}
               </div>
-              <div style={{ fontSize: "0.75rem", color: "#6B7280", marginTop: "4px" }}>
-                Collaborating with specialized agents to generate GPS Score...
+              <div style={{ fontSize: "0.75rem", color: "#6B7280", marginTop: "6px", maxWidth: "300px", margin: "6px auto 0" }}>
+                {AGENTS.find(a => a.label === researchPhase)?.msg || "Generating final GPS intelligence report..."}
               </div>
             </motion.div>
           )}
@@ -317,6 +311,15 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
                     <div style={{ textAlign: "center" }}>
                       <div style={{ fontSize: "0.75rem", color: "#9CA3AF" }}>Sector Average: <b style={{ color: "#F3F4F6" }}>{data.sector_avg_gps}</b></div>
                     </div>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${data.name} Analysis Summary:\nGPS Score: ${data.gps_score}\nFair Value: ${data.currency}${data.fair_value}\nSentiment: ${data.sentiment_score}/100`);
+                        alert("Research summary copied to clipboard!");
+                      }}
+                      style={{ marginTop: "0.5rem", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#9CA3AF", padding: "6px 12px", borderRadius: "6px", fontSize: "0.65rem", fontWeight: 700, cursor: "pointer" }}
+                    >
+                      Copy Research
+                    </button>
                   </div>
                 </div>
 
