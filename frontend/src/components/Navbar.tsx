@@ -1,0 +1,78 @@
+"use client";
+import { useState } from "react";
+import { Activity, Menu, X, Search, BarChart2, BrainCircuit, TrendingUp, Globe } from "lucide-react";
+
+const NAV = [
+  { href: "#", label: "GPS Analyzer",  icon: Search },
+  { href: "#", label: "Screeners",     icon: BarChart2 },
+  { href: "#", label: "AI Coach",      icon: BrainCircuit },
+  { href: "#", label: "Markets",       icon: Globe },
+];
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="glass-nav" style={{ position: "sticky", top: 0, zIndex: 50 }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.25rem", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+
+        {/* Logo */}
+        <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          <div style={{ background: "linear-gradient(135deg,#00E5FF,#0077AA)", padding: 6, borderRadius: 8, display: "flex" }}>
+            <Activity size={18} color="#000" />
+          </div>
+          <span style={{ fontWeight: 900, fontSize: "1.1rem", letterSpacing: "-0.03em", color: "#F3F4F6" }}>
+            INVESTORA<span style={{ color: "#00E5FF" }}>.AI</span>
+          </span>
+          <span style={{ background: "rgba(0,200,5,0.15)", color: "#00C805", border: "1px solid rgba(0,200,5,0.3)", borderRadius: 4, fontSize: "0.6rem", fontWeight: 800, padding: "1px 5px", letterSpacing: "0.08em" }}>
+            BETA
+          </span>
+        </a>
+
+        {/* Desktop nav */}
+        <nav style={{ display: "flex", gap: 2, alignItems: "center" }} className="desktop-nav">
+          {NAV.map(({ href, label, icon: Icon }) => (
+            <a key={label} href={href}
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "0.45rem 0.85rem", borderRadius: 8, textDecoration: "none", fontSize: "0.82rem", fontWeight: 500, color: "#9CA3AF", transition: "all 0.2s" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#F3F4F6"; (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "#9CA3AF"; (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+            >
+              <Icon size={14} />
+              {label}
+            </a>
+          ))}
+        </nav>
+
+        {/* CTA */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(0,200,5,0.08)", border: "1px solid rgba(0,200,5,0.2)", borderRadius: 9999, padding: "0.3rem 0.75rem" }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00C805", display: "inline-block" }} className="pulse-dot" />
+            <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#00C805", letterSpacing: "0.05em" }}>MARKETS OPEN</span>
+          </div>
+          <button className="btn-primary" style={{ padding: "0.45rem 1rem", fontSize: "0.8rem" }}>
+            Launch Research
+          </button>
+          <button onClick={() => setOpen(!open)} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: 6, cursor: "pointer", color: "#9CA3AF", display: "none" }} className="mobile-menu-btn">
+            {open ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {open && (
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "0.75rem 1.25rem", display: "flex", flexDirection: "column", gap: 4 }}>
+          {NAV.map(({ href, label, icon: Icon }) => (
+            <a key={label} href={href} onClick={() => setOpen(false)}
+              style={{ display: "flex", alignItems: "center", gap: 8, padding: "0.6rem 0.75rem", borderRadius: 8, textDecoration: "none", fontSize: "0.875rem", color: "#9CA3AF" }}
+            >
+              <Icon size={15} />
+              {label}
+            </a>
+          ))}
+        </div>
+      )}
+
+      <style>{`@media(max-width:768px){.desktop-nav{display:none!important}.mobile-menu-btn{display:flex!important}}`}</style>
+    </header>
+  );
+}
