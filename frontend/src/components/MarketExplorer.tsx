@@ -245,6 +245,12 @@ export default function MarketExplorer({ onAnalyze }: { onAnalyze: (ticker: stri
                 </tr>
               )}
               {filtered.length === 0 && !loading && !error && (
+                <tr>
+                  <td colSpan={5} style={{ padding: "3rem", textAlign: "center", color: "#4B5563" }}>
+                    No assets found matching your criteria.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

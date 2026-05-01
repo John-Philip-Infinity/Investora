@@ -282,7 +282,18 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
                       </div>
                     </div>
                     
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "0.5rem" }}>
+                    <div className="summary-prob-grid" style={{ gap: "1rem", marginTop: "0.5rem" }}>
+                      <style>{`
+                        .summary-prob-grid {
+                          display: grid;
+                          grid-template-columns: 1fr 1fr;
+                        }
+                        @media (max-width: 640px) {
+                          .summary-prob-grid {
+                            grid-template-columns: 1fr;
+                          }
+                        }
+                      `}</style>
                       <div style={{ background: "rgba(0,200,5,0.05)", padding: "1rem", borderRadius: "12px", border: "1px solid rgba(0,200,5,0.1)" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#00C805", fontSize: "0.7rem", fontWeight: 800, textTransform: "uppercase", marginBottom: "0.5rem" }}>
                           <TrendingUp size={12}/> Bullish Probability
@@ -452,7 +463,7 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
             )}
 
             {activeView === "ratings" && (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "1.5rem" }}>
+              <div className="grid-responsive-2">
                 <div className="card" style={{ padding: "2rem" }}>
                   <h2 style={{ fontSize: "1.25rem", fontWeight: 800, marginBottom: "2rem" }}>Factor Rating Matrix</h2>
                   <div style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
