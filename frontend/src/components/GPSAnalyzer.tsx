@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Target, TrendingUp, TrendingDown, Shield, AlertTriangle, BrainCircuit, Activity, Newspaper, Zap, Info, ArrowRight, RefreshCw } from "lucide-react";
+import { Search, Target, TrendingUp, TrendingDown, Shield, AlertTriangle, BrainCircuit, Activity, Newspaper, Zap, Info, ArrowRight, RefreshCw, Globe } from "lucide-react";
 import RadarChart from "./RadarChart";
 
 interface AnalysisData {
@@ -159,6 +159,12 @@ export default function GPSAnalyzer({ initialTicker = "" }: { initialTicker?: st
             className="search-input"
             style={{ borderRadius: "16px" }}
           />
+          <button 
+            type="submit" 
+            disabled={loading || !ticker.trim()} 
+            className="btn-primary"
+            style={{ position: "absolute", right: "8px", top: "8px", height: "calc(100% - 16px)", borderRadius: "10px" }}
+          >
             {loading ? <RefreshCw size={18} className="animate-spin" /> : <><span style={{ marginRight: "8px" }}>Analyze</span> <ArrowRight size={16} /></>}
           </button>
         </form>
